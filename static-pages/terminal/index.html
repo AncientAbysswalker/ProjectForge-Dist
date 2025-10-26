@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>The Lost Terminal</title>
+        <link rel="stylesheet" href="./style.css" />
+        <link rel="icon" href="icon.png" />
+    </head>
+    <body>
+        <!-- Outer black background -->
+        <div id="outer-bg">
+            <!-- Scalable screen container with fixed aspect ratio -->
+            <div id="screen-container">
+                <img src="bezel.png" id="bezel">
+                <div id="scan"></div>
+                <div id="console">
+                    <p>
+                        <span id="input"></span><span id="cursor" class="blinking-cursor">_</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <script type="module" src="./script.js"></script>
+    </body>
+</html>

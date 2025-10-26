@@ -1,0 +1,122 @@
+:root {
+  --gradient-size: 0.1rem;
+  --screen-color: #008000;
+  --text-color: #b1fd00;
+  --text-shadow-color: #e2ffb7;
+  --buffer-color: #fdf900;
+  --buffer-shadow-color: #fdfb88;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background: #000;
+  overflow: hidden;
+  font-family: 'Times New Roman';
+  font-weight: 400;
+  font-style: normal;
+}
+
+#outer-bg {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#screen-container {
+  position: relative;
+  width: 80vw;
+  max-width: 1200px;
+  aspect-ratio: 16 / 9;
+  background: var(--screen-color);
+  box-shadow: 0 0 40px #000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#bezel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+#scan {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 2;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0rem,
+    transparent var(--gradient-size),        /* Scales with font size */
+    rgba(0, 0, 0, 0.8) var(--gradient-size),
+    rgba(0, 0, 0, 0.8) calc(var(--gradient-size) * 2)
+  );
+}
+
+#console {
+  position: absolute;
+  z-index: 1;
+  inset: 0; /* Fill the screen-container */
+  margin: 0;
+  color: var(--text-color);
+  letter-spacing: 0.5em;
+  display: block;
+  font-size: min(1.6vw, 24px); /* Scales with container width until it reaches the max size for the terminal */
+  transition: color 5s ease-in;
+  background: transparent;
+  overflow-wrap: break-word;
+  padding: 5% 4% 5% 5%; /* Keeps current top-left position */
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+#console p {
+  margin: 0;
+  word-wrap: break-word; /* Ensures long words will break onto the next line */
+  text-align: left; /* Align text to top left */
+  vertical-align: top;
+}
+
+#input {
+  text-shadow: 1px 1px 2px var(--text-shadow-color), 0 0 1em var(--text-shadow-color), 0 0 0.2em var(--text-shadow-color);
+}
+
+.blinking-cursor {
+  color: var(--text-color);
+  text-shadow: 1px 1px 2px var(--text-shadow-color), 0 0 1em var(--text-shadow-color), 0 0 0.2em var(--text-shadow-color);
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    visibility: visible; /* Fully visible */
+  }
+  50%, 100% {
+    visibility: hidden; /* Hidden */
+  }
+}
+
+.buffer-cursor {
+  color: var(--buffer-color);
+  text-shadow: 1px 1px 2px var(--buffer-shadow-color), 0 0 1em var(--text-shadow-color), 0 0 0.2em var(--text-shadow-color);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
