@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMS Quest</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .iphone {
+      width: 375px;
+      height: 812px;
+      background: #1f1f1f;
+      border-radius: 55px;
+      padding: 12px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 5;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 28px;
+      background: #1f1f1f;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      border-radius: 45px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .status-bar {
+      height: 44px;
+      background: #f6f6f6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+      padding-top: 8px;
+    }
+
+    .time {
+      font-weight: 600;
+    }
+
+    .indicators {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .header {
+      background: #f6f6f6;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .back-btn {
+      color: #007aff;
+      font-size: 16px;
+    }
+
+    .contact-name {
+      flex: 1;
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background: #fff;
+      height: calc(100% - 160px);
+    }
+
+    .message {
+      display: flex;
+      margin-bottom: 12px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.received {
+      justify-content: flex-start;
+    }
+
+    .message.sent {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 70%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      word-wrap: break-word;
+    }
+
+    .received .bubble {
+      background: #e5e5ea;
+      color: #000;
+      border-bottom-left-radius: 4px;
+    }
+
+    .sent .bubble {
+      background: #007aff;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .input-area {
+      background: #f6f6f6;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid #ddd;
+    }
+
+    .camera-btn {
+      width: 32px;
+      height: 32px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .camera-btn::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background-color: #007aff;
+      -webkit-mask: url('/icons/camera.svg') no-repeat center;
+      mask: url('/icons/camera.svg') no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+
+    .camera-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .camera-btn:disabled::before {
+      background-color: #888; /* Grey color for disabled state */
+    }
+
+    .input-wrapper {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .message-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .send-btn {
+      width: 32px;
+      height: 32px;
+      background: #007aff;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      padding: 0;
+    }
+
+    .send-btn::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background-color: white;
+      -webkit-mask: url('/icons/send.svg') no-repeat center;
+      mask: url('/icons/send.svg') no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .send-btn:not(:disabled):hover {
+      opacity: 0.8;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      height: 100vh;
+      background: rgba(31, 31, 31, 0.98);
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
+      z-index: 100;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      color: #fff;
+    }
+
+    .sidebar.left {
+      left: 0;
+      width: 320px;
+      transform: translateX(-100%);
+    }
+
+    .sidebar.left.open {
+      transform: translateX(0);
+    }
+
+    .sidebar.right {
+      right: 0;
+      width: 320px;
+      transform: translateX(100%);
+    }
+
+    .sidebar.right.open {
+      transform: translateX(0);
+    }
+
+    .sidebar.hidden {
+      display: none;
+    }
+
+    .sidebar-toggle {
+      position: fixed;
+      top: 20px;
+      background: rgba(78, 204, 163, 0.95);
+      color: #000;
+      border: none;
+      padding: 7px 7px;
+      cursor: pointer;
+      font-weight: 600;
+      border-radius: 80px;
+      transition: all 0.3s;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar-toggle:hover {
+      background: rgba(61, 184, 138, 0.95);
+      transform: translateY(-2px);
+    }
+
+    .sidebar-toggle.left {
+      left: 20px;
+    }
+
+    .sidebar-toggle.hidden {
+      display: none;
+    }
+
+    #infoToggle {
+      top: 20px;
+    }
+
+    #officeToggle {
+      top: 75px;
+    }
+
+    #phoneToggle {
+      top: 130px;
+    }
+
+    .sidebar-content {
+      padding: 30px;
+      height: 100%;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .sidebar-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      padding: 0;
+    }
+
+    .sidebar-close::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background-color: white;
+      -webkit-mask: url('/icons/x.svg') no-repeat center;
+      mask: url('/icons/x.svg') no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+
+    .sidebar-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+
+    .sidebar-content h2 {
+      margin-bottom: 20px;
+      color: #4ecca3;
+      font-size: 24px;
+    }
+
+    .sidebar-content h3 {
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #4ecca3;
+      font-size: 18px;
+    }
+
+    .sidebar-content h4 {
+      margin-top: 15px;
+      margin-bottom: 8px;
+      color: #b8e6d5;
+      font-size: 16px;
+    }
+
+    .sidebar-content p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+      color: #ccc;
+    }
+
+    .sidebar-content ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+      color: #ccc;
+    }
+
+    .sidebar-content li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    /* Dev Controls */
+    .dev-controls {
+      display: flex;
+      gap: 15px;
+      padding: 15px 25px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .dev-btn {
+      padding: 12px 24px;
+      background: rgba(78, 204, 163, 0.2);
+      color: #4ecca3;
+      border: 2px solid #4ecca3;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .dev-btn:hover {
+      background: #4ecca3;
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    .dev-btn:active {
+      transform: translateY(0);
+    }
+
+    .info-icon {
+      width: 25px;
+      height: 25px;
+      background-color: white;
+      -webkit-mask: url('/icons/info.svg') no-repeat center;
+      mask: url('/icons/info.svg') no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+
+    .office-icon {
+      width: 25px;
+      height: 25px;
+      background-color: white;
+      -webkit-mask: url('/icons/notepad.svg') no-repeat center;
+      mask: url('/icons/notepad.svg') no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+
+    .phone-icon {
+      width: 19px;
+      height: 19px;
+      margin: 3px;
+      background-color: white;
+      -webkit-mask: url('/icons/phone.svg') no-repeat center;
+      mask: url('/icons/phone.svg') no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+  </style>
+  <!-- PyScript CSS -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.2.1/core.css">
+  <!-- This script tag bootstraps PyScript -->
+  <script type="module" src="https://pyscript.net/releases/2024.2.1/core.js"></script>
+  <!-- SMS Quest Python Code -->
+  <script type="py" src="smsquest/combined.py"></script>
+</head>
+<body>
+  <!-- (Always accessible) -->
+  <button class="sidebar-toggle left" id="infoToggle" onclick="toggleSidebar('infoToggle')">
+    <div class="info-icon"></div>
+  </button>
+  <div class="sidebar left" id="infoSidebar">
+    <div class="sidebar-content">
+      <button class="sidebar-close" onclick="toggleSidebar('infoToggle')"></button>
+      <h2>SMS Quest</h2>
+      <p>A text-based adventure game played through SMS messages!</p>
+
+      <h3>About This Project</h3>
+      <p>This is a web-based version of the text adventure created for the 2025 Christmas hint. In the full implementation, the user would interact with the text adventure via SMS and they could make or recieve calls.</p>
+      <p>This implementation allows for a similar level of interaction without the burden of having to be done via a phone (and without me having to continue paying for the Twilio).</p>
+      
+      <h3>How to Play</h3>
+      <ul>
+        <li>Read the messages from the game</li>
+        <li>Type your actions or responses</li>
+        <li>Press send or Enter to submit</li>
+        <li>Explore and discover the story!</li>
+      </ul>
+      
+      <h3>Tips</h3>
+      <ul>
+        <li>If you need help with game commands type "explain"</li>
+        <li>Be creative with your responses</li>
+        <li>Pay attention to details in the descriptions</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- (Hidden initially) -->
+  <button class="sidebar-toggle left hidden" id="officeToggle" onclick="toggleSidebar('officeToggle')">
+    <div class="office-icon"></div>
+  </button>
+  <div class="sidebar left hidden" id="officeSidebar">
+    <div class="sidebar-content">
+      <button class="sidebar-close" onclick="toggleSidebar('officeToggle')"></button>
+      <h2>Desk Dive</h2>
+      
+      <h3>Hints Found</h3>
+      <p>✅ Band Poster<br>✅ Sticky Notes<br>✅ Flight Ticket<br>✅ Painting<br>✅ Computer Background</p>
+      
+      <h3>The Puzzle</h3>
+      <p>Given the hints found in the office, the player would call 438.796.4311 (a Quebec number). What would follow would be a classic spy-handler interaction using the hints found throughout the office. It was up to the player to figure out how to start the conversation and the correct responses to the back-and-forth interaction.</p>
+      <p>If the player gets all the responses correct, they will be rewarded with the next hint. If they get a respone incorrect, the handler will hang up prematurely.</p>
+      
+      <h3>Interaction Recordings</h3>
+      <p>As the full implementation was done through Twilio and I am no longer paying to have it running, I have recordings of the interaction below to continue to support the experience.</p>
+      
+      <h4>Successful Interaction</h4>
+      <audio controls style="width: 100%; margin: 15px 0;">
+        <source src="audio\handler-agent-interaction-success.wav" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+      
+      <h4>Failed Interaction</h4>
+      <audio controls style="width: 100%; margin: 15px 0;">
+        <source src="audio\handler-agent-interaction-failed.wav" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+
+  <!-- (Hidden initially) -->
+  <button class="sidebar-toggle left hidden" id="phoneToggle" onclick="toggleSidebar('phoneToggle')">
+    <div class="phone-icon"></div>
+  </button>
+  <div class="sidebar left hidden" id="phoneSidebar">
+    <div class="sidebar-content">
+      <button class="sidebar-close" onclick="toggleSidebar('phoneToggle')"></button>
+      <h2>The Hint Line</h2>
+      
+      <h3>The Puzzle</h3>
+      <p>Using this phone, the player can recieve hints to a 5-digit pad used to end the text adventure.</p>
+      <p>In the full implementation, the player could enter a phone number and Twilio would call that number with one of two sets of hints. An additional restriction was that they couldn't call themselves, as their phone was 'already busy' given the player was calling using the phone inside their phone.</p>
+
+      <h3>Hint Recordings</h3>
+      <p>As the full implementation was done through Twilio and I am no longer paying to have it running, I have recordings of the hints below to continue to support the experience.</p>
+      
+      <h4>Hint #1</h4>
+      <audio controls style="width: 100%; margin: 15px 0;">
+        <source src="audio\hint-1.wav" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+      
+      <h4>Hint #2</h4>
+      <audio controls style="width: 100%; margin: 15px 0;">
+        <source src="audio\hint-2.wav" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <div class="iphone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="status-bar">
+          <div class="time" id="time">9:41</div>
+          <div class="indicators">
+            <span>📶</span>
+            <span>📡</span>
+            <span>🔋</span>
+          </div>
+        </div>
+        
+        <div class="header">
+          <div class="back-btn">‹ Messages</div>
+          <div class="contact-name">SMS Quest (+202.873.8701)</div>
+          <div style="width: 20px;"></div>
+        </div>
+
+        <div class="messages-container" id="messages">
+          <div class="message received">
+            <div class="bubble">You wake up in a pitch dark room. You feel groggy and disoriented. You can just make out a faint line of light coming from under a doorway to the north.</div>
+          </div>
+        </div>
+
+        <div class="input-area">
+          <button class="camera-btn" disabled></button>
+          <div class="input-wrapper">
+            <input type="text" class="message-input" id="messageInput" placeholder="iMessage">
+          </div>
+          <button class="send-btn" id="sendBtn" disabled></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Long-term version or early access?
+    const earlyAccess = true
+    console.log(`Running in ${earlyAccess ? "early access" : "long-term"} mode.`);
+
+    const input = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const messagesContainer = document.getElementById('messages');
+    const timeDisplay = document.getElementById('time');
+
+    // Update time
+    function updateTime() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      timeDisplay.textContent = `${hours}:${minutes}`;
+    }
+    updateTime();
+    setInterval(updateTime, 60000);
+
+    // Enable/disable send button
+    input.addEventListener('input', () => {
+      sendBtn.disabled = input.value.trim() === '';
+    });
+    
+    function appendSentTextMessage(text) {
+      appendMessage(text, null, 'sent');
+    }
+    
+    function appendRecievedTextMessage(text) {
+      appendMessage(text, null, 'received');
+    }
+    
+    function appendRecievedSeagullImageMessage() {
+      appendMessage(null, "untitled.jpg", 'received');
+    }
+    
+    function appendMessage(text = null, imageUrl = null, type) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+      
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+
+      let img, textDiv;
+      
+      if (imageUrl) {
+        img = document.createElement('img');
+        img.src = imageUrl;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+        img.style.marginBottom = '8px';
+        img.style.display = 'block';
+      }
+
+      if (text) {
+        textDiv = document.createElement('div');
+        textDiv.style.whiteSpace = 'pre-wrap';
+        textDiv.textContent = text;
+      }
+
+      img && bubble.appendChild(img);
+      textDiv && bubble.appendChild(textDiv);
+
+      messageDiv.appendChild(bubble);
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Send message
+    function sendMessage() {
+      const text = input.value.trim();
+      if (text === '') return;
+
+      appendSentTextMessage(text);
+      
+      // Clear input
+      input.value = '';
+      sendBtn.disabled = true;
+      
+      // Scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Generate response
+      setTimeout(() => {
+        const response = window.fake_sms_reply ? window.fake_sms_reply("webuser", text) : JSON.stringify({body: "Game is loading..."});
+        const replyText = JSON.parse(response).body;
+        const callWithHint = JSON.parse(response).call_with_hint || null;
+        const hintIndex = JSON.parse(response).hint_index || null;
+        const seagullsFound = JSON.parse(response).seagulls_found || null;
+        const officeAllFound = JSON.parse(response).office_all_found || null;
+
+        appendRecievedTextMessage(replyText);
+
+        // Handle additional state doing things
+        if (callWithHint != null && hintIndex != null) {
+          console.log('Calling Function with:', callWithHint, hintIndex);
+          if (earlyAccess) {
+            this.sendRealPhonecall(numberToCall, hintIndex)
+          } else {
+            setTimeout(() => {
+              showPhoneSidebar()
+            }, 1000);
+          }
+        }
+
+        if (seagullsFound != null) {
+          appendRecievedSeagullImageMessage();
+        }
+
+        if (officeAllFound != null) {
+          setTimeout(() => {
+            showOfficeSidebar()
+          }, 1000);
+        }
+      }, 1000);
+    }
+
+    function sendRealPhonecall(numberToCall, hintIndex) {
+      fetch('https://callingwithsafepassword-6738.twil.io/calling-with-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // Any data you want to send to your Function
+          MY_PHONE_NUMBER: numberToCall,
+          HINT_INDEX: hintIndex,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Function response:', data);
+      })
+      .catch(error => {
+        console.error('Error calling Function:', error);
+      });
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    // Sidebar Functions
+    function toggleSidebar(side) {
+      let sidebar;
+      if (side === 'infoToggle') {
+        sidebar = document.getElementById('infoSidebar');
+      } else if (side === 'officeToggle') {
+        sidebar = document.getElementById('officeSidebar');
+      } else if (side === 'phoneToggle') {
+        sidebar = document.getElementById('phoneSidebar');
+      }
+      
+      if (sidebar) {
+        // If opening this sidebar, close all others
+        if (!sidebar.classList.contains('open')) {
+          closeAllSidebars();
+        }
+        sidebar.classList.toggle('open');
+      }
+    }
+
+    function closeAllSidebars() {
+      document.getElementById('infoSidebar').classList.remove('open');
+      document.getElementById('officeSidebar').classList.remove('open');
+      document.getElementById('phoneSidebar').classList.remove('open');
+    }
+
+    // Close sidebars when clicking on main content area
+    document.addEventListener('click', (e) => {
+      const clickedSidebar = e.target.closest('.sidebar');
+      const clickedToggle = e.target.closest('.sidebar-toggle');
+      const clickedDevBtn = e.target.closest('.dev-btn');
+      
+      // If clicked outside sidebars and their toggles, close all
+      if (!clickedSidebar && !clickedToggle && !clickedDevBtn) {
+        closeAllSidebars();
+      }
+    });
+
+    function showOfficeSidebar() {
+      closeAllSidebars(); // Close any open sidebar first
+      const sidebar = document.getElementById('officeSidebar');
+      const toggle = document.getElementById('officeToggle');
+      
+      sidebar.classList.remove('hidden');
+      toggle.classList.remove('hidden');
+      
+      setTimeout(() => sidebar.classList.add('open'), 10);
+    }
+
+    function showPhoneSidebar() {
+      closeAllSidebars(); // Close any open sidebar first
+      const sidebar = document.getElementById('phoneSidebar');
+      const toggle = document.getElementById('phoneToggle');
+      
+      sidebar.classList.remove('hidden');
+      toggle.classList.remove('hidden');
+      
+      setTimeout(() => sidebar.classList.add('open'), 10);
+    }
+  </script>
+</body>
+</html>
