@@ -182,8 +182,8 @@
       width: 18px;
       height: 18px;
       background-color: #007aff;
-      -webkit-mask: url('/icons/camera.svg') no-repeat center;
-      mask: url('/icons/camera.svg') no-repeat center;
+      -webkit-mask: url('icons/camera.svg') no-repeat center;
+      mask: url('icons/camera.svg') no-repeat center;
       -webkit-mask-size: contain;
       mask-size: contain;
     }
@@ -194,7 +194,7 @@
     }
 
     .camera-btn:disabled::before {
-      background-color: #888; /* Grey color for disabled state */
+      background-color: #888;
     }
 
     .input-wrapper {
@@ -234,8 +234,8 @@
       width: 18px;
       height: 18px;
       background-color: white;
-      -webkit-mask: url('/icons/send.svg') no-repeat center;
-      mask: url('/icons/send.svg') no-repeat center;
+      -webkit-mask: url('icons/send.svg') no-repeat center;
+      mask: url('icons/send.svg') no-repeat center;
       -webkit-mask-size: contain;
       mask-size: contain;
     }
@@ -326,6 +326,10 @@
       top: 130px;
     }
 
+    #huntEndToggle {
+      top: 185px;
+    }
+
     .sidebar-content {
       padding: 30px;
       height: 100%;
@@ -355,8 +359,8 @@
       width: 18px;
       height: 18px;
       background-color: white;
-      -webkit-mask: url('/icons/x.svg') no-repeat center;
-      mask: url('/icons/x.svg') no-repeat center;
+      -webkit-mask: url('icons/x.svg') no-repeat center;
+      mask: url('icons/x.svg') no-repeat center;
       -webkit-mask-size: contain;
       mask-size: contain;
     }
@@ -439,8 +443,8 @@
       width: 25px;
       height: 25px;
       background-color: white;
-      -webkit-mask: url('/icons/info.svg') no-repeat center;
-      mask: url('/icons/info.svg') no-repeat center;
+      -webkit-mask: url('icons/info.svg') no-repeat center;
+      mask: url('icons/info.svg') no-repeat center;
       -webkit-mask-size: contain;
       mask-size: contain;
     }
@@ -449,8 +453,8 @@
       width: 25px;
       height: 25px;
       background-color: white;
-      -webkit-mask: url('/icons/notepad.svg') no-repeat center;
-      mask: url('/icons/notepad.svg') no-repeat center;
+      -webkit-mask: url('icons/notepad.svg') no-repeat center;
+      mask: url('icons/notepad.svg') no-repeat center;
       -webkit-mask-size: contain;
       mask-size: contain;
     }
@@ -460,10 +464,140 @@
       height: 19px;
       margin: 3px;
       background-color: white;
-      -webkit-mask: url('/icons/phone.svg') no-repeat center;
-      mask: url('/icons/phone.svg') no-repeat center;
+      -webkit-mask: url('icons/phone.svg') no-repeat center;
+      mask: url('icons/phone.svg') no-repeat center;
       -webkit-mask-size: contain;
       mask-size: contain;
+    }
+
+    .trophy-icon {
+      width: 25px;
+      height: 25px;
+      background-color: white;
+      -webkit-mask: url('icons/bunny.svg') no-repeat center;
+      mask: url('icons/bunny.svg') no-repeat center;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
+
+    /* Early Access Form Overlay */
+    .form-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+
+    .form-overlay.active {
+      display: flex;
+    }
+
+    .feedback-form {
+      background: rgba(31, 31, 31, 0.98);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      color: #fff;
+    }
+
+    .feedback-form h2 {
+      color: #4ecca3;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .feedback-form p {
+      color: #ccc;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #4ecca3;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(78, 204, 163, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #4ecca3;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .form-submit {
+      flex: 1;
+      padding: 14px;
+      background: #4ecca3;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .form-submit:hover {
+      background: #3db88a;
+      transform: translateY(-2px);
+    }
+
+    .form-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .form-cancel {
+      padding: 14px 20px;
+      background: transparent;
+      color: #ccc;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .form-cancel:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #fff;
+      color: #fff;
     }
   </style>
   <!-- PyScript CSS -->
@@ -568,6 +702,61 @@
     </div>
   </div>
 
+  <!-- (Hidden initially) -->
+  <button class="sidebar-toggle left hidden" id="huntEndToggle" onclick="toggleSidebar('huntEndToggle')">
+    <div class="trophy-icon"></div>
+  </button>
+  <div class="sidebar left hidden" id="huntEndSidebar">
+    <div class="sidebar-content">
+      <button class="sidebar-close" onclick="toggleSidebar('huntEndToggle')"></button>
+      <h2>🎉 Hunt Complete!</h2>
+      
+      <h3>Congratulations!</h3>
+      <p>You've successfully completed the SMS Quest text adventure and uncovered all the mysteries within!</p>
+      
+      <h3>Your Journey</h3>
+      <p>Throughout this adventure, you:</p>
+      <ul>
+        <li>Navigated through dark rooms and mysterious locations</li>
+        <li>Discovered hidden clues in an office setting</li>
+        <li>Interacted with a spy handler using coded responses</li>
+        <li>Solved puzzles using phone-based hints</li>
+        <li>Unlocked the final 5-digit code to escape</li>
+      </ul>
+      
+      <h3>Behind the Scenes</h3>
+      <p>This web version recreates the original SMS-based experience that was built using Twilio for the 2025 Christmas hint. The original allowed real phone calls and SMS interactions, creating an immersive spy-themed puzzle hunt.</p>
+      
+      <h3>Thank You!</h3>
+      <p>Thanks for playing SMS Quest! We hope you enjoyed this unique text adventure experience.</p>
+    </div>
+  </div>
+
+  <!-- Early Access Feedback Form -->
+  <div class="form-overlay" id="feedbackOverlay">
+    <div class="feedback-form">
+      <h2>🎉 Hunt Complete!</h2>
+      <p>Congratulations on completing SMS Quest! We'd love to hear your thoughts on this early access experience.</p>
+      
+      <form id="feedbackForm" onsubmit="submitFeedback(event)">
+        <div class="form-group">
+          <label for="playerName">Your Name</label>
+          <input type="text" id="playerName" name="name" required placeholder="Enter your name">
+        </div>
+        
+        <div class="form-group">
+          <label for="playerComment">Comments & Feedback</label>
+          <textarea id="playerComment" name="comment" required placeholder="Share your thoughts about the experience..."></textarea>
+        </div>
+        
+        <div class="form-buttons">
+          <button type="button" class="form-cancel" onclick="closeFeedbackForm()">Skip</button>
+          <button type="submit" class="form-submit" id="submitBtn">Submit Feedback</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Main Content -->
   <div class="main-container">
     <div class="iphone">
@@ -603,6 +792,13 @@
         </div>
       </div>
     </div>
+
+    <!-- Developer Controls -->
+    <!-- <div class="dev-controls">
+      <button class="dev-btn" onclick="showOfficeSidebar()">🔓 Unlock Office Panel</button>
+      <button class="dev-btn" onclick="showPhoneSidebar()">🔓 Unlock Phone Panel</button>
+      <button class="dev-btn" onclick="showHuntEnd()">🔓 Trigger Hunt End</button>
+    </div> -->
   </div>
 
   <script>
@@ -696,6 +892,7 @@
         const hintIndex = JSON.parse(response).hint_index || null;
         const seagullsFound = JSON.parse(response).seagulls_found || null;
         const officeAllFound = JSON.parse(response).office_all_found || null;
+        const huntIsEnded = JSON.parse(response).observed_bunny || null;
 
         appendRecievedTextMessage(replyText);
 
@@ -703,7 +900,7 @@
         if (callWithHint != null && hintIndex != null) {
           console.log('Calling Function with:', callWithHint, hintIndex);
           if (earlyAccess) {
-            this.sendRealPhonecall(numberToCall, hintIndex)
+            sendRealPhonecall(callWithHint, hintIndex);
           } else {
             setTimeout(() => {
               showPhoneSidebar()
@@ -720,6 +917,12 @@
             showOfficeSidebar()
           }, 1000);
         }
+
+        if (huntIsEnded != null) {
+          setTimeout(() => {
+            showHuntEnd()
+          }, 3000);
+        }
       }, 1000);
     }
 
@@ -730,7 +933,6 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          // Any data you want to send to your Function
           MY_PHONE_NUMBER: numberToCall,
           HINT_INDEX: hintIndex,
         }),
@@ -761,6 +963,8 @@
         sidebar = document.getElementById('officeSidebar');
       } else if (side === 'phoneToggle') {
         sidebar = document.getElementById('phoneSidebar');
+      } else if (side === 'huntEndToggle') {
+        sidebar = document.getElementById('huntEndSidebar');
       }
       
       if (sidebar) {
@@ -776,6 +980,7 @@
       document.getElementById('infoSidebar').classList.remove('open');
       document.getElementById('officeSidebar').classList.remove('open');
       document.getElementById('phoneSidebar').classList.remove('open');
+      document.getElementById('huntEndSidebar').classList.remove('open');
     }
 
     // Close sidebars when clicking on main content area
@@ -791,9 +996,14 @@
     });
 
     function showOfficeSidebar() {
-      closeAllSidebars(); // Close any open sidebar first
       const sidebar = document.getElementById('officeSidebar');
       const toggle = document.getElementById('officeToggle');
+
+      if (!toggle.classList.contains('hidden')) {
+        return;
+      }
+      
+      closeAllSidebars();
       
       sidebar.classList.remove('hidden');
       toggle.classList.remove('hidden');
@@ -802,14 +1012,99 @@
     }
 
     function showPhoneSidebar() {
-      closeAllSidebars(); // Close any open sidebar first
       const sidebar = document.getElementById('phoneSidebar');
       const toggle = document.getElementById('phoneToggle');
+
+      if (!toggle.classList.contains('hidden')) {
+        return;
+      }
+      
+      closeAllSidebars();
       
       sidebar.classList.remove('hidden');
       toggle.classList.remove('hidden');
       
       setTimeout(() => sidebar.classList.add('open'), 10);
+    }
+
+    function showHuntEnd() {
+      if (earlyAccess) {
+        const hiddenIFrame = document.querySelector('iframe[name="hidden_iframe"]');
+        if (!hiddenIFrame) {
+          document.getElementById('feedbackOverlay').classList.add('active');
+        }
+      } else {
+        // Show hunt end sidebar
+        const sidebar = document.getElementById('huntEndSidebar');
+        const toggle = document.getElementById('huntEndToggle');
+
+        if (!toggle.classList.contains('hidden')) {
+          return;
+        }
+        
+        closeAllSidebars();
+        
+        sidebar.classList.remove('hidden');
+        toggle.classList.remove('hidden');
+        
+        setTimeout(() => sidebar.classList.add('open'), 10);
+      }
+    }
+
+    function closeFeedbackForm() {
+      document.getElementById('feedbackOverlay').classList.remove('active');
+    }
+
+    function submitFeedback(event) {
+      event.preventDefault();
+      
+      const submitButton = document.getElementById('submitBtn');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Submitting...';
+      
+      const name = document.getElementById('playerName').value;
+      const comment = document.getElementById('playerComment').value;
+      const timestamp = new Date().toISOString();
+      
+      // Create hidden iframe
+      const iframe = document.createElement('iframe');
+      iframe.name = 'hidden_iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      // Create a hidden form
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://script.google.com/macros/s/AKfycbx0LN0vH7vLSLFX_HEXj8_RonbxiSs9xpGprO7NspCMcgLuAC2n1GZ3OuNTktLx6w5I/exec';
+      form.style.display = 'none';
+      form.target = 'hidden_iframe';
+
+      // Append hidden inputs
+      const fields = { timestamp, name, comment };
+      for (const key in fields) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = fields[key];
+        form.appendChild(input);
+      }
+
+      // Append form to body, submit, then remove form and iframe after submission
+      document.body.appendChild(form);
+      form.submit();
+
+      // Give the form a short time to mention it has bee submitted
+      setTimeout(() => {
+        submitButton.textContent = 'Thank You!';
+
+        // Then hide the form
+        setTimeout(() => {
+          closeFeedbackForm();
+          document.getElementById('feedbackForm').reset();
+          submitButton.disabled = false;
+          submitButton.textContent = 'Submit Feedback';
+        }, 1000);
+      }, 250);
     }
   </script>
 </body>

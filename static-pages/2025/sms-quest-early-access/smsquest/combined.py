@@ -1608,6 +1608,8 @@ def set_state_flag(item_obj):
         game_state.OFFICE_PAINTINGS = True
     elif item_obj == flight_ticket:
         game_state.OFFICE_TICKET = True
+    elif item_obj == bunny:
+        ADDITIONAL_STATE_TO_RESPOND[ADDITIONAL_STATE_KEYS.OBSERVED_BUNNY] = "true"
     else:
         return
 
@@ -1617,6 +1619,36 @@ def check_if_all_office_collected():
     if game_state.OFFICE_POSTER and game_state.OFFICE_STICKIES and game_state.OFFICE_PAINTINGS and game_state.OFFICE_TICKET and game_state.OFFICE_COMPUTER:
         ADDITIONAL_STATE_TO_RESPOND[ADDITIONAL_STATE_KEYS.OFFICE_ALL_FOUND] = "true"
         controller_wardrobe()
+'''
+phone_validator.py
+'''
+PHONE_PATTERN = r'^[\+]?[1]?[\s\-\.]?[\(]?(\d{3})[\)]?[\s\-\.]?(\d{3})[\s\-\.]?(\d{4})$'
+
+def is_phone_like(self, phone_number: str) -> bool:
+    """Check if text matches phone number pattern."""
+    return bool(re.match(self.PHONE_PATTERN, phone_number.strip()))
+
+def normalize_phone(self, phone_number: str) -> Optional[str]:
+    """
+    Extract just the digits from a phone number for comparison.
+    Returns 10-digit string for US numbers, None if invalid.
+    """
+    if not self.is_phone_like(phone_number):
+        return None
+        
+    # Extract all digits
+    digits = re.sub(r'\D', '', phone_number)
+    
+    # Handle US numbers with country code
+    if len(digits) == 11 and digits.startswith('1'):
+        digits = digits[1:]  # Remove country code
+    elif len(digits) == 10:
+        pass  # Perfect
+    else:
+        return None  # Invalid length
+        
+    return digits
+
 
 '''
 app.py
@@ -1632,6 +1664,7 @@ class ADDITIONAL_STATE_KEYS(str, Enum):
 
     # State specific to long-term mode
     OFFICE_ALL_FOUND = "office_all_found"
+    OBSERVED_BUNNY = "observed_bunny"
 
 ADDITIONAL_STATE_TO_RESPOND: dict[ADDITIONAL_STATE_KEYS, str] = {}
 
@@ -1641,8 +1674,6 @@ debug_mode = True
 # Manually set if early-access mode or not
 early_access_mode = True
 
-phone_validator = None
-
 # --- Game Setup ---
 current_room: Room = dark_room
 inventory = Bag()
@@ -1651,11 +1682,17 @@ set_context(Context.EXPLORING)
 
 @when("PHONE", context=Context.USING_PHONE)
 def phone_number(phone):
+    if not is_phone_like(phone):
+        return "I don't know how to dial that..."
+    
+    normalized_phone = normalize_phone(phone)
+    if not normalized_phone:
+        return "I don't know how to dial that..."
+
     set_context(Context.EXPLORING)
     ADDITIONAL_STATE_TO_RESPOND[ADDITIONAL_STATE_KEYS.CALL_WITH_HINT] = phone
     ADDITIONAL_STATE_TO_RESPOND[ADDITIONAL_STATE_KEYS.HINT_INDEX] = str(random.randint(0, 1))
-
-    return "You call the number..."
+    return "You dial the number. The number rings for a moment... then connects! You hear the clicking and whirring of what sounds like a phone switchboard and the line goes dead..."
 
 
 @when("DIGITS", context=Context.USING_SAFE)
@@ -2243,19 +2280,6 @@ def controller_wardrobe():
     if wardrobe_investigated in list(dark_room.fixtures):
         dark_room.fixtures.remove(wardrobe_investigated)
         dark_room.fixtures.add(wardrobe_with_secret_investigated)
-
-
-@when("debug phone NUMBER", context=Context.EXPLORING)
-def debug_phone(number):
-    phone_index = phone_validator.phone_index(number)
-    return f"acknowledged - phone {number} has index {phone_index} and returned index {phone_index % 2}"
-
-
-@when("debug phonecall INDEX NUMBER", context=Context.EXPLORING)
-def debug_phonecall(index, number):
-    ADDITIONAL_STATE_TO_RESPOND[ADDITIONAL_STATE_KEYS.CALL_WITH_HINT] = number
-    ADDITIONAL_STATE_TO_RESPOND[ADDITIONAL_STATE_KEYS.HINT_INDEX] = str(int(index) % 2)
-    return f"acknowledged - calling {number} with hint index {str(int(index) % 2)}"
 
 
 # DEBUG COMMANDS
