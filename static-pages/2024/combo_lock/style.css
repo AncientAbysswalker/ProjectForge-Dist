@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700");
+body {
+  font-family: "Source Code Pro", monospace;
+}
+
+body {
+  align-items: center;
+  background: #2a3546;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#combo-lock #indicator {
+  border: 2px solid #070707;
+  border-radius: 50%;
+  height: 32px;
+  margin: 0 auto 24px;
+  overflow: hidden;
+  position: relative;
+  width: 32px;
+}
+#combo-lock #indicator.locked svg.unlocked {
+  transform: translate(-50%, 50%);
+}
+#combo-lock #indicator.unlocked svg.locked {
+  transform: translate(-50%, -100%);
+}
+#combo-lock #indicator.unlocked svg.unlocked {
+  transform: translate(-50%, -50%);
+}
+#combo-lock #indicator svg {
+  padding: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease;
+  width: 16px;
+}
+#combo-lock #indicator svg.locked {
+  background: #f56666;
+}
+#combo-lock #indicator svg.unlocked {
+  background: #50ef87;
+}
+#combo-lock #combination {
+  border: 2px solid #070707;
+  border-radius: 4px;
+  display: flex;
+  padding: 0 4px;
+}
+#combo-lock #combination .wheel {
+  font-size: 24px;
+  padding: 0 4px;
+  text-align: center;
+}
+#combo-lock #combination .wheel .gap-top,
+#combo-lock #combination .wheel .gap-bot {
+  height: 28px;
+  position: relative;
+  width: 28px;
+}
+#combo-lock #combination .wheel .gap-top {
+  margin-top: -14px;
+}
+#combo-lock #combination .wheel .gap-bot {
+  margin-bottom: -14px;
+}
+#combo-lock #combination .wheel .increment,
+#combo-lock #combination .wheel .decrement {
+  background: #1d242f;
+  border: 2px solid #070707;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 24px;
+  position: relative;
+  transition: border-color 0.1s ease;
+  width: 24px;
+}
+#combo-lock #combination .wheel .increment:active,
+#combo-lock #combination .wheel .decrement:active {
+  border-color: #fff;
+}
+#combo-lock #combination .wheel .increment.click,
+#combo-lock #combination .wheel .decrement.click {
+  border-color: #fff;
+  transition: border-color 0s ease;
+}
+#combo-lock #combination .wheel .increment img,
+#combo-lock #combination .wheel .decrement img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+}
+#combo-lock #combination .wheel .increment {
+  margin-top: -14px;
+}
+#combo-lock #combination .wheel .decrement {
+  margin-bottom: -14px;
+}
+#combo-lock #combination .wheel .digit {
+  -moz-appearance: textfield;
+  background: #1d242f;
+  border: 2px solid #070707;
+  border-radius: 24px;
+  caret-color: #1d242f;
+  color: #fff;
+  cursor: pointer;
+  margin: 8px 0;
+  outline: none;
+  padding: 8px 0;
+  text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: border-color 0.1s ease;
+  width: 24px;
+}
+#combo-lock #combination .wheel .colon {
+  -moz-appearance: textfield;
+  background: #1d242f;
+  border: 2px solid #070707;
+  border-radius: 24px;
+  color: #fff;
+  margin: 8px 0;
+  outline: none;
+  padding: 8px 0;
+  text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: border-color 0.1s ease;
+  width: 24px;
+}
+#combo-lock #combination .wheel .digit:focus {
+  border-color: #fff;
+}
+#combo-lock #combination .wheel .digit::-webkit-inner-spin-button,
+#combo-lock #combination .wheel .digit::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#combo-lock #combination .wheel .digit::-moz-selection {
+  background: transparent;
+}
+#combo-lock #combination .wheel .digit::selection {
+  background: transparent;
+}

@@ -1,0 +1,11 @@
+body,
+html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: left;
+    align-items: start;
+    background-color: #f0f0f0; /* Optional: Sets a light background color */
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
