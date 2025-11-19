@@ -1669,7 +1669,7 @@ class ADDITIONAL_STATE_KEYS(str, Enum):
 ADDITIONAL_STATE_TO_RESPOND: dict[ADDITIONAL_STATE_KEYS, str] = {}
 
 # Manually set debug mode
-debug_mode = True
+debug_mode = False
 
 # Manually set if early-access mode or not
 early_access_mode = True
@@ -1709,10 +1709,14 @@ def using_safe(digits):
     
     if stripped_digits == SAFE_NUMBER:
         set_context(Context.EXPLORING)
-        current_room.fixtures.remove(safe)
-        current_room.fixtures.add(safe_open)
-        inventory.add(bunny)
-        return "You enter the code and the safe makes a happy beep! The door swings open and inside you find a small plastic toy bunny? You take the bunny."
+        if not early_access_mode:
+            current_room.fixtures.remove(safe)
+            current_room.fixtures.add(safe_open)
+            inventory.add(bunny)
+            return "You enter the code and the safe makes a happy beep! The door swings open and inside you find a small plastic toy bunny? You take the bunny."
+        else:
+            ADDITIONAL_STATE_TO_RESPOND[ADDITIONAL_STATE_KEYS.OBSERVED_BUNNY] = "true"
+            return "You enter the code and the safe makes a happy beep! The door swings open and inside you find a picture."
     else:
         set_context(Context.EXPLORING)
         return "You enter the code and the safe makes a sad bloop sound... That must not have been the code..."
