@@ -1237,11 +1237,11 @@ kitchen = Room(
 
 office = Room(
     functional_description=lambda self: (
-        "You are in what appears to be an office. There is a desk with a computer terminal as well as several filing cabinets."
+        "You are in what appears to be an office. There is a desk with a computer terminal as well as a filing cabinet."
         + (" The computer is off." if computer in list(self.fixtures) else " The computer is on.")
-        + (" There are some sticky notes on the desk and some kind of ticket sitting one of the filing cabinets." if stickies in list(self.items) and flight_ticket in list(self.items) else "")
+        + (" There are some sticky notes on the desk and some kind of ticket sitting on the filing cabinet." if stickies in list(self.items) and flight_ticket in list(self.items) else "")
         + (" There are some sticky notes on the desk." if stickies in list(self.items) and flight_ticket not in list(self.items) else "")
-        + (" There is some kind of ticket sitting one of the filing cabinets." if stickies not in list(self.items) and flight_ticket in list(self.items) else "")
+        + (" There is some kind of ticket sitting on the filing cabinet." if stickies not in list(self.items) and flight_ticket in list(self.items) else "")
         + " There are some fancy paintings on the wall, and the hardwood floor has a large area rug covering a large section of it."
         + (" The corner of the rug is flipped over, revealing a safe hidden under the rug." if safe in list(self.fixtures) else "") 
         +" The room gives off an elegant and sophisticated air."
@@ -1624,16 +1624,16 @@ phone_validator.py
 '''
 PHONE_PATTERN = r'^[\+]?[1]?[\s\-\.]?[\(]?(\d{3})[\)]?[\s\-\.]?(\d{3})[\s\-\.]?(\d{4})$'
 
-def is_phone_like(self, phone_number: str) -> bool:
+def is_phone_like(phone_number: str) -> bool:
     """Check if text matches phone number pattern."""
-    return bool(re.match(self.PHONE_PATTERN, phone_number.strip()))
+    return bool(re.match(PHONE_PATTERN, phone_number.strip()))
 
-def normalize_phone(self, phone_number: str) -> Optional[str]:
+def normalize_phone(phone_number: str) -> Optional[str]:
     """
     Extract just the digits from a phone number for comparison.
     Returns 10-digit string for US numbers, None if invalid.
     """
-    if not self.is_phone_like(phone_number):
+    if not is_phone_like(phone_number):
         return None
         
     # Extract all digits
@@ -2068,7 +2068,7 @@ def use_item_on_fixture(item, fixture):
             inventory.remove(open_can)
             return "You put the open can on the ground. A fluffy gray cat comes running over and starts happily eating the food. It looks up at you with big green eyes, and then goes back to eating."
 
-        return f"There is no {fixture} here."
+        return f"You can't use {item} on {fixture}."
 
     if inv_item == crowbar:
         if obj_item == breaker_closed:
@@ -2144,6 +2144,8 @@ def use_item_on_fixture(item, fixture):
 
 @when("turn on", context=Context.EXPLORING)
 @when("turn on breaker", context=Context.EXPLORING)
+@when("switch on", context=Context.EXPLORING)
+@when("switch on breaker", context=Context.EXPLORING)
 def turn_on_breaker():
     global current_room
 
@@ -2239,6 +2241,12 @@ def use_item(item):
     if inv_item == cat:
         return "You hug the cat. It purrs softly and nuzzles against you."
     
+    if inv_item == key:
+        if current_room == west_hallway:
+            inventory.remove(key)
+            heavy_wooden_door.is_locked = False
+            return "You unlock the heavy-looking wooden door."
+
     return f"You can't use {item}."
 
 

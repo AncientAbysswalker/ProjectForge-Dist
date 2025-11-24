@@ -54,6 +54,13 @@ class Chest {
         this.engineFramesPerAnimationFrame = 3;
         this.currentAnimationMaxFrames = 6;
 
+        // Canvas resize animation
+        this.isAnimatingResize = false;
+        this.startCanvasSize = 0;
+        this.targetCanvasSize = 0;
+        this.resizeAnimationFrame = 0;
+        this.resizeAnimationDuration = 45; // ~1.5 seconds at 30fps
+
         // State
         this.state = state.CLOSED;
         this.lastState;
@@ -79,14 +86,48 @@ class Chest {
         if (!this.isOpened() && checkBoundingBoxesCollision(this, this.key)) {
             // Expand the canvas viewport
             const canvas = document.getElementById('canvas');
-            const newSize = Math.min(canvas.width + 112, 384); // Grow by 112px, max 384px
-            canvas.width = newSize;
-            canvas.height = newSize;
+            const newSize = canvas.width + 64; // Grow by 64px
+            
+            // Initialize gradual resize animation
+            this.startCanvasSize = canvas.width;
+            this.targetCanvasSize = newSize;
+            this.isAnimatingResize = true;
+            this.resizeAnimationFrame = 0;
             
             audio.currentTime = 0;
             audio.play();
             this.updateState(state.OPENING);
             this.key.consume();
+        }
+
+        // Handle canvas resize animation
+        if (this.isAnimatingResize) {
+            this.animateCanvasResize();
+        }
+    }
+
+    animateCanvasResize() {
+        const canvas = document.getElementById('canvas');
+        this.resizeAnimationFrame++;
+
+        // Calculate progress (0 to 1)
+        const progress = Math.min(this.resizeAnimationFrame / this.resizeAnimationDuration, 1);
+        
+        // Apply easing (ease-out cubic for smooth deceleration)
+        const eased = 1 - Math.pow(1 - progress, 3);
+        
+        // Calculate current size
+        const currentSize = this.startCanvasSize + (this.targetCanvasSize - this.startCanvasSize) * eased;
+        
+        // Apply to canvas
+        canvas.width = currentSize;
+        canvas.height = currentSize;
+
+        // Stop animation when complete
+        if (progress >= 1) {
+            this.isAnimatingResize = false;
+            canvas.width = this.targetCanvasSize;
+            canvas.height = this.targetCanvasSize;
         }
     }
 

@@ -917,9 +917,11 @@
         }
 
         if (officeAllFound != null) {
-          setTimeout(() => {
-            showOfficeSidebar()
-          }, 1000);
+          if (!earlyAccess) {
+            setTimeout(() => {
+              showOfficeSidebar()
+            }, 1000);
+          }
         }
 
         if (huntIsEnded != null) {

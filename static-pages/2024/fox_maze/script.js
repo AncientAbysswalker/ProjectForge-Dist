@@ -8,7 +8,7 @@ import { Engine } from './Engine.js';
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const debug = true;
+const debug = false;
 
 // Map data is stored with indices of row then col
 const mapCollisionResponse = await fetch('./map.json');

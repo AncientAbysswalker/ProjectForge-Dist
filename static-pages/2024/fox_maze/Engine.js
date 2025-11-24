@@ -125,7 +125,15 @@ class Engine {
         if (currentEngineFrame > this.lastEngineFrame) {
             this.lastEngineFrame = currentEngineFrame;
 
-            // Reset Canvas
+            // Update all objects FIRST (before clearing/drawing)
+            // This allows objects to handle canvas resizing before rendering starts
+            // Without this, the resize events from the chests will clear the background 
+            this.playerObject.update();
+            for (const renderObject of this.getRenderList()) {
+                renderObject.update();
+            }
+
+            // Reset Canvas (after updates, so canvas resizing is handled first)
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             
             // Background color in case we go outside the maze
@@ -136,14 +144,8 @@ class Engine {
             for (const mapLayer of this.mapLayers) {
                 this.submitImageForDraw(mapLayer.layer, mapLayer.sprite, mapLayer.offsetX - this.winX, mapLayer.offsetY - this.winY);
             }
-
-            // Update all objects
-            this.playerObject.update();
-            for (const renderObject of this.getRenderList()) {
-                renderObject.update();
-            }
             
-            // Submit all objects for draw
+            // Submit all objects for draw (updates already happened above)
             this.playerObject.draw();
             for (const renderObject of this.getRenderList()) {
                 renderObject.draw();
