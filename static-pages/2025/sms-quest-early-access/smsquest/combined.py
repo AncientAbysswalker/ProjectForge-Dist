@@ -2093,7 +2093,7 @@ def use_item_on_fixture(item, fixture):
         
     if inv_item == cat:
         if obj_item == vent:
-            inventory.add(unobtainable_brass_key)
+            inventory.add(key)
             current_room.fixtures.remove(vent)
             current_room.fixtures.add(vent_empty)
             return "The cat dashes into the vent! You hear a commotion inside. After a moment, the cat comes back out, proudly carrying a small brass key in its mouth. It drops the key at your feet. You retrieve the key, and your friendly feline companion."
